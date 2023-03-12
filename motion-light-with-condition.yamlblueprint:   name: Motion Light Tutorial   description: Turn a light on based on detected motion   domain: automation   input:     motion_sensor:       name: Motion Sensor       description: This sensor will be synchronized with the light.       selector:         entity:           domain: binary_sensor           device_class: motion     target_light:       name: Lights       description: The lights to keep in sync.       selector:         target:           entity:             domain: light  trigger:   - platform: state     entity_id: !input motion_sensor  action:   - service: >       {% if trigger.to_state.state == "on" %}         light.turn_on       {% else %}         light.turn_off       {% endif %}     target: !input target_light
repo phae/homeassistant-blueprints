@@ -1,6 +1,6 @@
 blueprint:
   name: Motion Light with Conditions
-  description: Turn a light on based on detected motion, with an additional conditions
+  description: Turn a light on based on detected motion, with additional conditions
   domain: automation
   input:
     motion_sensor:
@@ -17,6 +17,10 @@ blueprint:
         target:
           entity:
             domain: light
+condition:
+  - condition: state
+    entity_id: media_player.living.room.tv
+    state: "off"
 
 trigger:
   - platform: state
