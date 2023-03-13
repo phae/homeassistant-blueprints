@@ -19,8 +19,8 @@ blueprint:
             domain: light
 condition:
   - condition: state
-    entity_id: media_player.living.room.tv
-    state: "off"
+    entity_id: !input
+    state: !input
 
 trigger:
   - platform: state
