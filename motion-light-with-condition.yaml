@@ -1,5 +1,5 @@
 blueprint:
-  name: Motion-activated Light (only when sun is up and someone at home)
+  name: Motion activated lights but only when not watching TV
   description: Turn on a light when motion is detected.
   domain: automation
   source_url: https://github.com/phae/homeassistant-blueprints/edit/main/motion-light-with-condition.yaml
