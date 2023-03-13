@@ -42,11 +42,11 @@ trigger:
   entity_id: !input motion_entity
   from: "off"
   to: "on"
-
-condition:
+  
+condition: not
   - condition: state
     entity_id: !input media_entity
-    state: "off"
+    state: "on"
 
 action:
   - alias: "Turn on the light"
