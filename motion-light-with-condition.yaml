@@ -1,36 +1,65 @@
 blueprint:
-  name: Motion Light with Conditions
-  description: Turn a light on based on detected motion, but not when the TV is already on
+  name: Motion-activated Light (only when sun is up and someone at home)
+  description: Turn on a light when motion is detected.
   domain: automation
+  source_url: https://github.com/phae/homeassistant-blueprints/edit/main/motion-light-with-condition.yaml
   input:
-    motion_sensor:
+    motion_entity:
       name: Motion Sensor
-      description: This sensor will be synchronized with the light.
       selector:
         entity:
           domain: binary_sensor
           device_class: motion
-    target_light:
-      name: Lights
-      description: The lights to keep in sync.
+    light_target:
+      name: Light
       selector:
         target:
           entity:
             domain: light
-conditions:
-  - condition: state
-    entity_id: sensor.tv_media_playback_status
-    state: "off"
+    no_motion_wait:
+      name: Wait time
+      description: Time to leave the light on after last motion is detected.
+      default: 120
+      selector:
+        number:
+          min: 0
+          max: 3600
+          unit_of_measurement: seconds
+    media_entity:
+      name: Media player
+      description: The TV you want the motion to pause for.
+      selector:
+        entity:
+          domain: media_player
+
+# If motion is detected within the delay,
+# we restart the script.
+mode: restart
+max_exceeded: silent
 
 trigger:
-  - platform: state
-    entity_id: !input motion_sensor
+  platform: state
+  entity_id: !input motion_entity
+  from: "off"
+  to: "on"
+
+condition:
+  - condition: state
+    entity_id: !input media_entity
+    state: "off"
 
 action:
-  - service: >
-      {% if trigger.to_state.state == "on" %}
-        light.turn_on
-      {% else %}
-        light.turn_off
-      {% endif %}
-    target: !input target_light
+  - alias: "Turn on the light"
+    service: light.turn_on
+    target: !input light_target
+  - alias: "Wait until there is no motion from device"
+    wait_for_trigger:
+      platform: state
+      entity_id: !input motion_entity
+      from: "on"
+      to: "off"
+  - alias: "Wait the number of seconds that has been set"
+    delay: !input no_motion_wait
+  - alias: "Turn off the light"
+    service: light.turn_off
+    target: !input light_target
