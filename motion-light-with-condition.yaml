@@ -48,7 +48,7 @@ condition:
   not:
   - condition: state
     entity_id: !input media_entity
-    state: "on"
+    state: "Playing"
 
 action:
   - alias: "Turn on the light"
