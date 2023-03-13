@@ -43,7 +43,9 @@ trigger:
   from: "off"
   to: "on"
   
-condition: not
+condition:
+  alias: "Media player is NOT on"
+  not:
   - condition: state
     entity_id: !input media_entity
     state: "on"
