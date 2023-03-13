@@ -17,9 +17,9 @@ blueprint:
         target:
           entity:
             domain: light
-condition:
+conditions:
   - condition: state
-    entity_id: !input media_player
+    entity_id: sensor.tv_media_playback_status
     state: "off"
 
 trigger:
