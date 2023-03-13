@@ -20,7 +20,7 @@ blueprint:
 condition:
   - condition: state
     entity_id: !input
-    state: !input
+    entity.id.state: !input
 
 trigger:
   - platform: state
